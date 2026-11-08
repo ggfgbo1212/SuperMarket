@@ -6,7 +6,7 @@
  * - 全局 UI 对象 guider_ui 由 lvgl_action.c 定义，本头文件 extern 声明，
  *   任何模块（如 gpio_test.c 的 DispTask）包含本头文件即可访问。
  * - 各控件事件回调函数在本文件声明、在 lvgl_action.c 实现；
- *   "绑定"这一行写在对应屏幕的 setup_scr_SettingsPage4Xxx() 函数里。
+ *   "绑定"这一行写在对应屏幕的 setup_scr_XXX() 函数里。
  */
 
 #ifndef LVGL_ACTION_H
@@ -18,32 +18,32 @@ extern "C" {
 
 #include "gui_guider.h"   /* lv_ui 结构体类型 + 各屏控件句柄定义 */
 
-/* 全局 UI 对象：外部模块用这个变量访问各屏控件（如 guider_ui.SettingsPage4CheckUpdate2） */
+/* 全局 UI 对象：外部模块用这个变量访问各屏控件（如 guider_ui.HomeScreen） */
 extern lv_ui guider_ui;
 
 /* ==================== 控件事件回调函数 ==================== */
-/* 在对应的 setup_scr_SettingsPage4Xxx() 末尾绑定到控件，例如：
- *   lv_obj_add_event_cb(ui->SettingsPage4Info_check_update_btn,
- *                       settings_p4_info_check_update, LV_EVENT_CLICKED, NULL);
+/* 在对应的 setup_scr_XXX() 末尾绑定到控件，例如：
+ *   lv_obj_add_event_cb(ui->HomeScreen_title_label,
+ *                       home_screen_title_click, LV_EVENT_CLICKED, NULL);
  */
 
-/* 信息页"检查更新"按钮点击 → 检查是否有新版本 */
-void settings_p4_info_check_update(lv_event_t *e);
+/* SettingsPage1「基本设置」卡片点击 → 进入 SettingsPage2Basic */
+void settings_p1_enter_basic(lv_event_t *e);
 
-/* CheckUpdate2"确认"按钮点击 → 返回信息页 */
-void settings_p4_checkupdate2_confirm_back(lv_event_t *e);
+/* SettingsPage1「无线设置」cont_1 点击 → 进入 SettingsPage2Wireless1 */
+void settings_p1_enter_wireless1(lv_event_t *e);
 
-/* CheckUpdate3"立即升级"按钮点击 → 立即升级 */
-void settings_p4_checkupdate3_confirm_upgrade(lv_event_t *e);
+/* SettingsPage1「远程管理」cont_2 点击 → 进入 SettingsPage3Remote1 */
+void settings_p1_enter_remote1(lv_event_t *e);
 
-/* UpdateCplt"确认重启"按钮点击 → 确认重启跳转（内容待补充） */
-void settings_updatecplt_confirm_btn_event(lv_event_t *e);
+/* 各子页面右上角「<-返回」btn_1 点击 → 返回上一个界面（导航历史栈出栈） */
+void settings_back(lv_event_t *e);
 
-/* UpdateError"确认"按钮点击 → 返回信息页 */
-void settings_updateerror_confirm_btn_event(lv_event_t *e);
+/* SettingsPage2Basic 亮度滑条 → 调节屏幕背光（0~100） */
+void settings_p2_slider_brightness(lv_event_t *e);
 
-/* CheckUpdate2"确认"按钮点击 → 切换到信息页 */
-void settings_p4_info_switch_page(lv_event_t *e);
+/* SettingsPage2Basic 按键声音开关 → 使能/关闭触摸提示音 */
+void settings_p2_switch_beep(lv_event_t *e);
 
 #ifdef __cplusplus
 }

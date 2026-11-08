@@ -18,56 +18,62 @@ extern "C" {
 typedef struct
 {
   
-	lv_obj_t *SettingsPage4Info;
-	bool SettingsPage4Info_del;
-	lv_obj_t *SettingsPage4Info_settings_p4_info_image;
-	lv_obj_t *SettingsPage4Info_settings_p4_info_title;
-	lv_obj_t *SettingsPage4Info_settings_info_device_model_panel;
-	lv_obj_t *SettingsPage4Info_STM32F4_label;
-	lv_obj_t *SettingsPage4Info_settings_info_device_model_label;
-	lv_obj_t *SettingsPage4Info_settings_info_hw_version_pane;
-	lv_obj_t *SettingsPage4Info_settings_info_hw_version_label;
-	lv_obj_t *SettingsPage4Info_hw_version_label;
-	lv_obj_t *SettingsPage4Info_settings_info_sw_version_panel;
-	lv_obj_t *SettingsPage4Info_settings_info_sw_version_label;
-	lv_obj_t *SettingsPage4Info_sw_version_label;
-	lv_obj_t *SettingsPage4Info_check_update_btn;
-	lv_obj_t *SettingsPage4Info_check_update_btn_label;
-	lv_obj_t *SettingsPage4Info_aliyun_status_led;
-	lv_obj_t *SettingsPage4Info_wifi_status_label;
-	lv_obj_t *SettingsPage4Info_aliyun_status_label;
-	lv_obj_t *SettingsPage4Info_wifi_status_led;
-	lv_obj_t *SettingsPage4CheckUpdate1;
-	bool SettingsPage4CheckUpdate1_del;
-	lv_obj_t *SettingsPage4CheckUpdate1_settings_p4_checkupdate1_title;
-	lv_obj_t *SettingsPage4CheckUpdate1_settings_p4_checkupdate1_content;
-	lv_obj_t *SettingsPage4CheckUpdate2;
-	bool SettingsPage4CheckUpdate2_del;
-	lv_obj_t *SettingsPage4CheckUpdate2_settings_p4_checkupdate2_title;
-	lv_obj_t *SettingsPage4CheckUpdate2_settings_p4_checkupdate2_content;
-	lv_obj_t *SettingsPage4CheckUpdate2_setting_checkupdate2_confirm_btn;
-	lv_obj_t *SettingsPage4CheckUpdate2_setting_checkupdate2_confirm_btn_label;
-	lv_obj_t *SettingsPage4CheckUpdate3;
-	bool SettingsPage4CheckUpdate3_del;
-	lv_obj_t *SettingsPage4CheckUpdate3_settings_p4_checkupdate3_title;
-	lv_obj_t *SettingsPage4CheckUpdate3_settings_p4_checkupdate3_content;
-	lv_obj_t *SettingsPage4CheckUpdate3_setting_checkupdate3_confirm_btn;
-	lv_obj_t *SettingsPage4CheckUpdate3_setting_checkupdate3_confirm_btn_label;
-	lv_obj_t *SettingsPage4Updating;
-	bool SettingsPage4Updating_del;
-	lv_obj_t *SettingsPage4Updating_settings_p4_updating_title;
-	lv_obj_t *SettingsPage4Updating_settings_p4_updating_content;
-	lv_obj_t *SettingsPage4Updating_settings_p4_updating_bar;
-	lv_obj_t *SettingsPage4UpdateCplt;
-	bool SettingsPage4UpdateCplt_del;
-	lv_obj_t *SettingsPage4UpdateCplt_settings_updatecplt_confirm_btn;
-	lv_obj_t *SettingsPage4UpdateCplt_settings_updatecplt_confirm_btn_label;
-	lv_obj_t *SettingsPage4UpdateCplt_settings_p4_updatecplt_icon;
-	lv_obj_t *SettingsPage4UpdateError;
-	bool SettingsPage4UpdateError_del;
-	lv_obj_t *SettingsPage4UpdateError_settings_p4_updateerror_icon;
-	lv_obj_t *SettingsPage4UpdateError_settings_updateerror_confirm_btn;
-	lv_obj_t *SettingsPage4UpdateError_settings_updateerror_confirm_btn_label;
+	lv_obj_t *SettingsPage1;
+	bool SettingsPage1_del;
+	lv_obj_t *SettingsPage1_settings_p4_info_image;
+	lv_obj_t *SettingsPage1_settings_info_device_model_panel;
+	lv_obj_t *SettingsPage1_settings_info_device_model_label;
+	lv_obj_t *SettingsPage1_cont_1;
+	lv_obj_t *SettingsPage1_label_1;
+	lv_obj_t *SettingsPage1_cont_2;
+	lv_obj_t *SettingsPage1_label_2;
+	lv_obj_t *SettingsPage1_cont_3;
+	lv_obj_t *SettingsPage1_label_4;
+	lv_obj_t *SettingsPage1_label_3;
+	lv_obj_t *SettingsPage2Basic;
+	bool SettingsPage2Basic_del;
+	lv_obj_t *SettingsPage2Basic_settings_p4_checkupdate1_title;
+	lv_obj_t *SettingsPage2Basic_cont_1;
+	lv_obj_t *SettingsPage2Basic_label_3;
+	lv_obj_t *SettingsPage2Basic_slider_1;
+	lv_obj_t *SettingsPage2Basic_cont_2;
+	lv_obj_t *SettingsPage2Basic_label_4;
+	lv_obj_t *SettingsPage2Basic_sw_1;
+	lv_obj_t *SettingsPage2Basic_btn_1;
+	lv_obj_t *SettingsPage2Basic_btn_1_label;
+	lv_obj_t *SettingsPage2Wireless1;
+	bool SettingsPage2Wireless1_del;
+	lv_obj_t *SettingsPage2Wireless1_settings_p4_checkupdate1_title;
+	lv_obj_t *SettingsPage2Wireless1_cont_2;
+	lv_obj_t *SettingsPage2Wireless1_label_5;
+	lv_obj_t *SettingsPage2Wireless1_sw_2;
+	lv_obj_t *SettingsPage2Wireless1_list_1;
+	lv_obj_t *SettingsPage2Wireless1_btn_1;
+	lv_obj_t *SettingsPage2Wireless1_btn_1_label;
+	lv_obj_t *SettingsPage2Wireless2;
+	bool SettingsPage2Wireless2_del;
+	lv_obj_t *SettingsPage2Wireless2_settings_p4_checkupdate1_title;
+	lv_obj_t *SettingsPage2Wireless2_ta_1;
+	lv_obj_t *SettingsPage2Wireless2_btn_1;
+	lv_obj_t *SettingsPage2Wireless2_btn_1_label;
+	lv_obj_t *SettingsPage3Remote1;
+	bool SettingsPage3Remote1_del;
+	lv_obj_t *SettingsPage3Remote1_settings_p4_checkupdate1_title;
+	lv_obj_t *SettingsPage3Remote1_ta_1;
+	lv_obj_t *SettingsPage3Remote1_btnm_1;
+	lv_obj_t *SettingsPage3Remote1_btn_1;
+	lv_obj_t *SettingsPage3Remote1_btn_1_label;
+	lv_obj_t *SettingsPage2_Basic;
+	bool SettingsPage2_Basic_del;
+	lv_obj_t *SettingsPage2_Basic_settings_p4_checkupdate1_title;
+	lv_obj_t *SettingsPage2_Basic_cont_1;
+	lv_obj_t *SettingsPage2_Basic_label_6;
+	lv_obj_t *SettingsPage2_Basic_slider_2;
+	lv_obj_t *SettingsPage2_Basic_cont_2;
+	lv_obj_t *SettingsPage2_Basic_label_5;
+	lv_obj_t *SettingsPage2_Basic_sw_2;
+	lv_obj_t *SettingsPage2_Basic_btn_1;
+	lv_obj_t *SettingsPage2_Basic_btn_1_label;
 }lv_ui;
 
 void ui_init_style(lv_style_t * style);
@@ -75,22 +81,21 @@ void init_scr_del_flag(lv_ui *ui);
 void setup_ui(lv_ui *ui);
 extern lv_ui guider_ui;
 
-void setup_scr_SettingsPage4Info(lv_ui *ui);
-void setup_scr_SettingsPage4CheckUpdate1(lv_ui *ui);
-void setup_scr_SettingsPage4CheckUpdate2(lv_ui *ui);
-void setup_scr_SettingsPage4CheckUpdate3(lv_ui *ui);
-void setup_scr_SettingsPage4Updating(lv_ui *ui);
-void setup_scr_SettingsPage4UpdateCplt(lv_ui *ui);
-void setup_scr_SettingsPage4UpdateError(lv_ui *ui);
+void setup_scr_SettingsPage1(lv_ui *ui);
+void setup_scr_SettingsPage2Basic(lv_ui *ui);
+void setup_scr_SettingsPage2Wireless1(lv_ui *ui);
+void setup_scr_SettingsPage2Wireless2(lv_ui *ui);
+void setup_scr_SettingsPage3Remote1(lv_ui *ui);
+void setup_scr_SettingsPage2_Basic(lv_ui *ui);
 LV_IMG_DECLARE(_trademark_alpha_34x34);
-LV_IMG_DECLARE(_download_alpha_185x135);
-LV_IMG_DECLARE(_downloadx_alpha_185x135);
 
-LV_FONT_DECLARE(lv_font_simsun_16)
+LV_FONT_DECLARE(lv_font_simsun_23)
 LV_FONT_DECLARE(lv_font_montserratMedium_16)
+LV_FONT_DECLARE(lv_font_simsun_21)
+LV_FONT_DECLARE(lv_font_simsun_18)
 LV_FONT_DECLARE(lv_font_montserratMedium_12)
-LV_FONT_DECLARE(lv_font_simsun_12)
-LV_FONT_DECLARE(lv_font_simsun_25)
+LV_FONT_DECLARE(lv_font_simsun_20)
+LV_FONT_DECLARE(lv_font_Abel_regular_20)
 
 
 #ifdef __cplusplus

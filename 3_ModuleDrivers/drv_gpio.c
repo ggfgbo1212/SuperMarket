@@ -88,6 +88,17 @@ struct GPIODev LCD_LED = {
     .next = NULL
 };
 
+/* 蜂鸣器：低电平触发。引脚配置与触摸提示音逻辑在 lv_port_indev_template.c（CubeMX 未配置 PE8） */
+struct GPIODev BUZZER = {
+    .name = "BUZZER",
+    .port = GPIOE,
+    .pin = GPIO_PIN_8,
+    .Init = GPIO_Init,
+    .Write = GPIO_Write,
+    .Read = GPIO_Read,
+    .next = NULL
+};
+
 
 void GPIO_Regis()
 {
@@ -99,6 +110,7 @@ void GPIO_Regis()
     GPIODev_Insert(&LCD_DC);
     GPIODev_Insert(&LCD_CS);
     GPIODev_Insert(&LCD_LED);
+    GPIODev_Insert(&BUZZER);
 }
 
 

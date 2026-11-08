@@ -39,4 +39,8 @@ typedef struct ST7789Dev{
 /* 获取 ST7789 设备对象（仿 W25Q64 单例模式） */
 ST7789Device *GetST7789Device(void);
 
+/* 背光亮度调节（0~100）：首次调用时把背光脚 PB1 切到 TIM3_CH4 PWM（1kHz），
+ * 之后亮度一律走本接口（lcd_led 的 GPIO 开关此时不再生效）。 */
+void lcd_set_brightness(uint8_t percent);
+
 #endif /* __DEV_ST7789_H__ */

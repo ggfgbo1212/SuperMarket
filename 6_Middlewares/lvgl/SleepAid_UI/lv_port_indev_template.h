@@ -36,6 +36,9 @@ extern "C" {
 /* 初始化触摸输入设备驱动（XPT2046，软件 SPI，注册到 LVGL indev） */
 void lv_port_indev_init(void);
 
+/* 触摸提示音使能开关（蜂鸣器=drv_gpio 注册的 BUZZER 对象，逻辑在本 .c 内） */
+void lv_port_indev_beep_enable(uint8_t en);
+
 /**********************
  *      MACROS
  **********************/

@@ -90,6 +90,61 @@ static void lcd_rst(uint8_t level)  { g_rst->Write(g_rst, level); }
 static void lcd_led(uint8_t level)  { g_led->Write(g_led, level); }
 
 
+/* ==================== 背光 PWM 调光（PB1 = TIM3_CH4） ====================
+ * 上电时 PB1 是普通 GPIO 输出高（lcd_led(1) 全亮）。第一次调亮度时把 PB1 切到
+ * TIM3_CH4 复用 PWM，此后 lcd_led 不再生效（AF 模式忽略 ODR），亮度一律走本函数。
+ * TIM3 时钟 = APB1(42MHz)×2 = 84MHz；PSC=83 → 1MHz 计数，ARR=999 → 1kHz PWM，
+ * 高于可视频闪阈值；占空比 = 亮度 0~100% → CCR 0~1000（CCR>ARR 恒高 = 全亮）。 */
+
+#include "stm32f4xx_hal.h"
+
+static TIM_HandleTypeDef g_bl_tim;
+static uint8_t g_bl_pwm_ready = 0;
+
+static void backlight_pwm_init(void)
+{
+    __HAL_RCC_TIM3_CLK_ENABLE();
+
+    /* PB1 切复用：TIM3_CH4 = AF2 */
+    GPIO_InitTypeDef gpio = {0};
+    gpio.Pin       = GPIO_PIN_1;
+    gpio.Mode      = GPIO_MODE_AF_PP;
+    gpio.Pull      = GPIO_PULLUP;
+    gpio.Speed     = GPIO_SPEED_FREQ_LOW;
+    gpio.Alternate = GPIO_AF2_TIM3;
+    HAL_GPIO_Init(GPIOB, &gpio);
+
+    g_bl_tim.Instance               = TIM3;
+    g_bl_tim.Init.Prescaler         = 83;
+    g_bl_tim.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    g_bl_tim.Init.Period            = 999;
+    g_bl_tim.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+    HAL_TIM_PWM_Init(&g_bl_tim);
+
+    TIM_OC_InitTypeDef oc = {0};
+    oc.OCMode     = TIM_OCMODE_PWM1;    /* CNT<CCR 输出高：CCR 越大越亮 */
+    oc.Pulse      = 1000;               /* 初始全亮，与切换前 GPIO 高电平无缝衔接 */
+    oc.OCPolarity = TIM_OCPOLARITY_HIGH;
+    oc.OCFastMode = TIM_OCFAST_DISABLE;
+    HAL_TIM_PWM_ConfigChannel(&g_bl_tim, &oc, TIM_CHANNEL_4);
+
+    HAL_TIM_PWM_Start(&g_bl_tim, TIM_CHANNEL_4);
+}
+
+void lcd_set_brightness(uint8_t percent)
+{
+    if(percent > 100)   percent = 100;
+
+    if(!g_bl_pwm_ready)
+    {
+        backlight_pwm_init();
+        g_bl_pwm_ready = 1;
+    }
+
+    __HAL_TIM_SET_COMPARE(&g_bl_tim, TIM_CHANNEL_4, (uint32_t)percent * 10);
+}
+
+
 /* ==================== SPI 底层收发（SPI3 + 中断） ==================== */
 
 #define LCD_SPI_CHUNK   65535   /* HAL SPI Size 为 uint16_t，DMA 单次传输上限，超出由驱动层再分块 */

@@ -31,6 +31,8 @@ static int WifiBT_NetDisconnect(struct WiFiBtDev *ptdev, unsigned int port);
 static int WifiBT_Write(struct WiFiBtDev *ptdev, unsigned int port, unsigned char *buf, unsigned int length);
 static int WifiBT_Read(struct WiFiBtDev *ptdev, unsigned int port, unsigned char *buf, unsigned int length);
 static int WifiBT_WIFIStaStatus(struct WiFiBtDev *ptdev, unsigned int timeout);
+static int WifiBT_WIFIScan(struct WiFiBtDev *ptdev, WiFiApInfo *apList, unsigned char maxAp, unsigned int timeout);
+static int WiFiScanParseLine(const char *line, WiFiApInfo *pinfo);
 static int WiFiBTReadFromBuffer(struct WiFiBtDev *ptdev, unsigned int port, unsigned char *buf, unsigned int length);
 
 struct UARTDev* pUart = NULL;//wifi专用串口
@@ -49,7 +51,8 @@ WiFiBtDevice gWiFiBtDevice = {
     .NetDisconnect = WifiBT_NetDisconnect,
     .Write = WifiBT_Write,
     .Read = WiFiBTReadFromBuffer,
-    .WIFIStaStatus = WifiBT_WIFIStaStatus
+    .WIFIStaStatus = WifiBT_WIFIStaStatus,
+    .WIFIScan = WifiBT_WIFIScan
 
 };
 
@@ -518,6 +521,145 @@ static int WifiBT_WIFIStaStatus(struct WiFiBtDev *ptdev, unsigned int timeout)
 {
     if(NULL == ptdev)   return -EINVAL;
     return WiFiBTGetStaStatus(timeout);
+}
+
+/**
+ * @brief 解析一行热点信息 "<index> <SSID>,<CH>,<SECURITY>,<RSSI>,<BSSID>"
+ *
+ * @param line  一行应答文本（已去掉行尾 \r\n）
+ * @param pinfo 输出：解析结果
+ * @return ESUCCESS 成功；<0 格式不符
+ */
+static int WiFiScanParseLine(const char *line, WiFiApInfo *pinfo)
+{
+    const char *p = line;
+    const char *q = NULL;
+    unsigned int n = 0;
+
+    /* <index>：行首序号，丢弃（数组下标就是顺序） */
+    while(' ' == *p)  p++;
+    if(*p < '0' || *p > '9')    return -EINVAL;
+    while(*p >= '0' && *p <= '9')  p++;
+    while(' ' == *p)  p++;
+
+    /* <SSID>：到第一个 ',' */
+    q = strchr(p, ',');
+    if(NULL == q)   return -EINVAL;
+    n = (unsigned int)(q - p);
+    if(0 == n || n >= sizeof(pinfo->ssid))  return -EINVAL;
+    memcpy(pinfo->ssid, p, n);
+    pinfo->ssid[n] = '\0';
+    p = q + 1;
+
+    /* <CH>：到 ','（atoi 遇非数字自动停） */
+    q = strchr(p, ',');
+    if(NULL == q)   return -EINVAL;
+    pinfo->channel = (unsigned char)atoi(p);
+    p = q + 1;
+
+    /* <SECURITY>：到 ','，超长截断 */
+    q = strchr(p, ',');
+    if(NULL == q)   return -EINVAL;
+    n = (unsigned int)(q - p);
+    if(n >= sizeof(pinfo->security))  n = sizeof(pinfo->security) - 1;
+    memcpy(pinfo->security, p, n);
+    pinfo->security[n] = '\0';
+    p = q + 1;
+
+    /* <RSSI>：到 ','，可能带负号 */
+    q = strchr(p, ',');
+    if(NULL == q)   return -EINVAL;
+    pinfo->rssi = (signed char)atoi(p);
+    p = q + 1;
+
+    /* <BSSID>：行尾剩余全部 */
+    n = strlen(p);
+    if(n >= sizeof(pinfo->bssid))  n = sizeof(pinfo->bssid) - 1;
+    memcpy(pinfo->bssid, p, n);
+    pinfo->bssid[n] = '\0';
+
+    return ESUCCESS;
+}
+
+/**
+ * @brief 结构体成员版：扫描周围WiFi热点，刷新WiFi列表
+ *
+ * 指令/应答（AT+WSCAN）：
+ *   +WSCAN:index SSID,CH,SECURITY,RSSI,BSSID     ← 表头行，跳过
+ *   <index> <SSID>,<CH>,<SECURITY>,<RSSI>,<BSSID> ← 热点行，逐行解析
+ *   ...
+ *   OK                                            ← 应答结束
+ *
+ * 注意：pRxBuffer 只有100字节且满则覆盖，应答整体远超100字节，
+ * 所以必须边收边逐行解析（流式），不能攒完整个应答再处理。
+ *
+ * @param ptdev   wifi设备对象
+ * @param apList  输出：热点数组（调用方分配）
+ * @param maxAp   数组容量（热点数超过容量时多余的行丢弃，但会收完整个应答）
+ * @param timeout 空闲超时（ms，只在收不到数据时递减；扫描本身需数秒，建议 8000~10000）
+ * @return >=0 实际扫到的热点数；<0 错误（-EINVAL/-ENODEV/-EIO 含超时未收到 OK）
+ *
+ * 阻塞函数，期间独占 wifi 串口，请在非UI线程或能接受阻塞数秒的任务里调用。
+ */
+static int WifiBT_WIFIScan(struct WiFiBtDev *ptdev, WiFiApInfo *apList, unsigned char maxAp, unsigned int timeout)
+{
+    if(NULL == ptdev)               return -EINVAL;
+    if(NULL == apList || 0 == maxAp)  return -EINVAL;
+    if(NULL == pUart)               return -ENODEV;
+    if(NULL == pRxBuffer)           return -ENODEV;
+
+    char cmd[] = "AT+WSCAN\r\n";
+    int ret = pRxBuffer->Clear(pRxBuffer);
+    if(ESUCCESS != ret) return ret;
+    ret = pUart->Write(pUart, (unsigned char *)cmd, strlen(cmd));
+    if(strlen(cmd) != ret) return ret;
+
+    char line[96];              /* 单行拼包缓冲（最长行≈90字节，超长部分丢弃） */
+    unsigned char li = 0;       /* 当前行已收字节数 */
+    unsigned char count = 0;    /* 已解析的热点数 */
+
+    while(timeout)
+    {
+        unsigned char ch;
+        ret = pRxBuffer->Read(pRxBuffer, &ch, 1);
+        if(1 == ret)
+        {
+            if('\n' == ch)      /* 一行收完，去 \r 后分类处理 */
+            {
+                line[li] = '\0';
+                if(li > 0 && '\r' == line[li-1])  line[li-1] = '\0';
+
+                if(line[0] >= '0' && line[0] <= '9')       /* 热点数据行 */
+                {
+                    if(count < maxAp && ESUCCESS == WiFiScanParseLine(line, &apList[count]))
+                        count++;
+                    /* 容量已满或解析失败的行：丢弃，但继续收直到 OK，保证应答收干净 */
+                }
+                else if(0 == strcmp(line, "OK"))           /* 应答结束 */
+                {
+                    return (int)count;
+                }
+                else if(NULL != strstr(line, "ERR") || NULL != strstr(line, "Unknown cmd"))
+                {
+                    return -EIO;
+                }
+                /* 其余行（+WSCAN 表头、空行等）：跳过 */
+                li = 0;
+            }
+            else if(li < sizeof(line) - 1)
+            {
+                line[li++] = (char)ch;
+            }
+            /* 单行超长：不再保存，静默丢弃直到换行 */
+        }
+        else
+        {
+            timeout--;         /* 只在收不到数据时递减：连发数据不会吃掉超时 */
+            HAL_Delay(1);
+        }
+    }
+
+    return -EIO;   /* 超时没等到 OK */
 }
 
 

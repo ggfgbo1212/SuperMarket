@@ -23,18 +23,17 @@ void ui_init_style(lv_style_t * style)
 void init_scr_del_flag(lv_ui *ui)
 {
   
-	ui->SettingsPage4Info_del = true;
-	ui->SettingsPage4CheckUpdate1_del = true;
-	ui->SettingsPage4CheckUpdate2_del = true;
-	ui->SettingsPage4CheckUpdate3_del = true;
-	ui->SettingsPage4Updating_del = true;
-	ui->SettingsPage4UpdateCplt_del = true;
-	ui->SettingsPage4UpdateError_del = true;
+	ui->SettingsPage1_del = true;
+	ui->SettingsPage2Basic_del = true;
+	ui->SettingsPage2Wireless1_del = true;
+	ui->SettingsPage2Wireless2_del = true;
+	ui->SettingsPage3Remote1_del = true;
+	ui->SettingsPage2_Basic_del = true;
 }
 
 void setup_ui(lv_ui *ui)
 {
   init_scr_del_flag(ui);
-  setup_scr_SettingsPage4Info(ui);
-  lv_scr_load(ui->SettingsPage4Info);
+  setup_scr_SettingsPage1(ui);
+  lv_scr_load(ui->SettingsPage1);
 }

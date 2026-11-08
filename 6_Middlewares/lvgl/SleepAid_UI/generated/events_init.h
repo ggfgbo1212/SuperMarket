@@ -18,13 +18,12 @@ extern "C" {
 
 void events_init(lv_ui *ui);
 
-void events_init_SettingsPage4Info(lv_ui *ui);
-void events_init_SettingsPage4CheckUpdate1(lv_ui *ui);
-void events_init_SettingsPage4CheckUpdate2(lv_ui *ui);
-void events_init_SettingsPage4CheckUpdate3(lv_ui *ui);
-void events_init_SettingsPage4Updating(lv_ui *ui);
-void events_init_SettingsPage4UpdateCplt(lv_ui *ui);
-void events_init_SettingsPage4UpdateError(lv_ui *ui);
+void events_init_SettingsPage1(lv_ui *ui);
+void events_init_SettingsPage2Basic(lv_ui *ui);
+void events_init_SettingsPage2Wireless1(lv_ui *ui);
+void events_init_SettingsPage2Wireless2(lv_ui *ui);
+void events_init_SettingsPage3Remote1(lv_ui *ui);
+void events_init_SettingsPage2_Basic(lv_ui *ui);
 
 #ifdef __cplusplus
 }

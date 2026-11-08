@@ -19,30 +19,26 @@ extern "C" {
 #endif
 
 #include "gui_guider.h"   /* lv_ui 类型 + guider_ui（各屏控件句柄） */
-#include "FreeRTOS.h"     /* SemaphoreHandle_t：页间/WiFi→UI 信号量 */
-#include "semphr.h"
 
 /* 页面 ID：与 tick_screen_funcs[] 数组一一对应，顺序对齐 guider_ui 字段 */
 typedef enum {
-    SCREEN_SETTINGSPAGE4_INFO = 0,
-    SCREEN_SETTINGSPAGE4_CHECKUPDATE1,
-    SCREEN_SETTINGSPAGE4_CHECKUPDATE2,
-    SCREEN_SETTINGSPAGE4_CHECKUPDATE3,
-    SCREEN_SETTINGSPAGE4_UPDATING,
-    SCREEN_SETTINGSPAGE4_UPDATECPLT,
-    SCREEN_SETTINGSPAGE4_UPDATEERROR,
+    SCREEN_SETTINGSPAGE1 = 0,
+    SCREEN_SETTINGSPAGE2BASIC,
+    SCREEN_SETTINGSPAGE2WIRELESS1,
+    SCREEN_SETTINGSPAGE2WIRELESS2,
+    SCREEN_SETTINGSPAGE3REMOTE1,
+    SCREEN_SETTINGSPAGE2__BASIC,   /* GUI Guider 工程里的重复页（导航未接入） */
     SCREEN_NUM   /* 页面总数 = tick_screen_funcs[] 长度 */
 } screen_id_t;
 
 /* ==================== 每页一个周期循环函数 ==================== */
 /* 写各页面周期逻辑的地方（在 tickscreen.c 里实现） */
-void tick_screen_SettingsPage4Info(void);
-void tick_screen_SettingsPage4CheckUpdate1(void);
-void tick_screen_SettingsPage4CheckUpdate2(void);
-void tick_screen_SettingsPage4CheckUpdate3(void);
-void tick_screen_SettingsPage4Updating(void);
-void tick_screen_SettingsPage4UpdateCplt(void);
-void tick_screen_SettingsPage4UpdateError(void);
+void tick_screen_SettingsPage1(void);
+void tick_screen_SettingsPage2Basic(void);
+void tick_screen_SettingsPage2Wireless1(void);
+void tick_screen_SettingsPage2Wireless2(void);
+void tick_screen_SettingsPage3Remote1(void);
+void tick_screen_SettingsPage2_Basic(void);
 
 /* 按页面 ID 分发到对应 tick 函数（ui_tick 内部调用，外部一般不用） */
 void tick_screen_by_id(screen_id_t id);
@@ -50,33 +46,10 @@ void tick_screen_by_id(screen_id_t id);
 /* 每轮 UI 循环调用：tick 当前显示的页面 */
 void ui_tick(void);
 
-/* ==================== 页间信号量 ==================== */
-/* WiFi 已连接信号量（二值）：wifi_auto_connect_task 连接成功后 Give，
- * SettingsPage4Info 页 tick 函数 Take → wifi_status_led 变绿。
- * WiFi 断开信号量（二值）：wifi_auto_connect_task 轮询发现掉线后 Give，
- * SettingsPage4Info 页 tick 函数 Take → wifi/aliyun 两个状态 LED 变红。
- * 在 DispTask（UI 线程）里初始化，业务任务仅 Give、UI tick 仅 Take，
- * 所有 lv_* 调用始终保持在 UI 线程。 */
-void tickscreen_init(void);                    /* 创建各信号量（DispTask 里 setup 前调用） */
-extern SemaphoreHandle_t wifi_connected_sem;     /* WiFi 连接成功信号量 */
-extern SemaphoreHandle_t aliyun_connected_sem;   /* 入云（阿里云 MQTT）连接成功信号量 */
-extern SemaphoreHandle_t wifi_disconnected_sem;  /* WiFi 断开信号量 */
-
-/* 检查更新结果队列：业务线程（check_update_task）检测到 isGetUpgrade 后把结果发进队列，
- * SettingsPage4CheckUpdate1 页 tick 函数（UI 线程）接收后按值跳转页面。
- * 目的：跨线程通信只用队列，所有 lv_* 调用始终保持在 UI 线程（DispTask），
- * 避免在业务线程直接调 lv_scr_load/setup_scr 这种 LVGL 非线程安全用法导致死机。 */
-extern QueueHandle_t g_update_result_q;  /* 队列项：uint8_t（1=可升级 / 2=不可升级） */
-
-/* OTA 下载进度（0~100）：ota_upgrade_task（业务线程）只写这个全局变量，
- * SettingsPage4Updating 页 tick（UI 线程）读取后 lv_bar_set_value 刷新进度条。
- * volatile：跨线程单字读写，防编译器把值缓存在寄存器里。 */
-extern volatile int g_ota_progress;
-
-/* OTA 结果队列（队列项：uint8_t，1=升级完成 / 2=升级失败）：
- * ota_upgrade_task 检测到升级完成/失败后把结果发进队列，
- * SettingsPage4Updating 页 tick（UI 线程）接收后跳转 UpdateCplt/UpdateError。 */
-extern QueueHandle_t g_ota_result_q;
+/* 页间通信资源（信号量/队列）在此创建：新增页面需要跨线程通信时，
+ * 业务线程只 Give/Send，UI tick 只 Take/Receive，
+ * 所有 lv_* 调用始终保持在 UI 线程（DispTask），LVGL 非线程安全。 */
+void tickscreen_init(void);
 
 #ifdef __cplusplus
 }

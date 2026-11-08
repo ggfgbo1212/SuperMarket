@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../1_Appcations;../2_Devices;../2_Devices/at24cxx;../3_ModuleDrivers;../4_include;../5_libs;../2_Devices/w25q;../2_Devices/st7789;../2_Devices/touch;../6_Middlewares/cjon;../6_Middlewares/MD5;../2_Devices/wifi;../6_Middlewares/paho.mqtt.embedded-c-master/MQTTPacket/src;../6_Middlewares/paho.mqtt.embedded-c-master/MQTTClient-C/src;../6_Middlewares/paho.mqtt.embedded-c-master/MQTTClient-C/src/FreeRTOS;../6_Middlewares/lvgl/action;../6_Middlewares/lvgl/tickscreen;../6_Middlewares/lvgl/SleepAid_UI/lvgl;../6_Middlewares/lvgl/SleepAid_UI/custom;../6_Middlewares/lvgl/SleepAid_UI/generated;../6_Middlewares/lvgl/SleepAid_UI/generated/guider_fonts;../6_Middlewares/lvgl/SleepAid_UI;..\6_Middlewares\MD5</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../1_Appcations;../2_Devices;../2_Devices/at24cxx;../3_ModuleDrivers;../4_include;../5_libs;../2_Devices/w25q;../2_Devices/st7789;../2_Devices/touch;../2_Devices/wifi;../6_Middlewares/lvgl/action;../6_Middlewares/lvgl/tickscreen;../6_Middlewares/lvgl/SleepAid_UI/lvgl;../6_Middlewares/lvgl/SleepAid_UI/custom;../6_Middlewares/lvgl/SleepAid_UI/generated;../6_Middlewares/lvgl/SleepAid_UI/generated/guider_fonts;../6_Middlewares/lvgl/SleepAid_UI</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -387,26 +387,6 @@
               <FileName>gpio_test.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\1_Appcations\gpio_test.c</FilePath>
-            </File>
-            <File>
-              <FileName>aiot_mqtt_sign.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\1_Appcations\aiot_mqtt_sign.c</FilePath>
-            </File>
-            <File>
-              <FileName>mqtt_base.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\1_Appcations\mqtt_base.c</FilePath>
-            </File>
-            <File>
-              <FileName>mqtt_ota_ali.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\1_Appcations\mqtt_ota_ali.c</FilePath>
-            </File>
-            <File>
-              <FileName>iap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\1_Appcations\iap.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -517,91 +497,6 @@
               <FileName>ring_buffer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\5_libs\ring_buffer.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>06_Middleware/MQTT</GroupName>
-          <Files>
-            <File>
-              <FileName>MQTTConnectClient.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTPacket\src\MQTTConnectClient.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTConnectServer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTPacket\src\MQTTConnectServer.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTDeserializePublish.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTPacket\src\MQTTDeserializePublish.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTFormat.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTPacket\src\MQTTFormat.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTPacket.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTPacket\src\MQTTPacket.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTSerializePublish.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTPacket\src\MQTTSerializePublish.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTSubscribeClient.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTPacket\src\MQTTSubscribeClient.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTSubscribeServer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTPacket\src\MQTTSubscribeServer.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTUnsubscribeClient.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTPacket\src\MQTTUnsubscribeClient.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTUnsubscribeServer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTPacket\src\MQTTUnsubscribeServer.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTClient.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTClient-C\src\MQTTClient.c</FilePath>
-            </File>
-            <File>
-              <FileName>MQTTFreeRTOS.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\paho.mqtt.embedded-c-master\MQTTClient-C\src\FreeRTOS\MQTTFreeRTOS.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>06_Middleware/Cjon</GroupName>
-          <Files>
-            <File>
-              <FileName>cJSON.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\cjon\cJSON.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>6_Middlewares/md5</GroupName>
-          <Files>
-            <File>
-              <FileName>md5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\MD5\md5.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1462,6 +1357,11 @@
               <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\lvgl\src\extra\widgets\led\lv_led.c</FilePath>
             </File>
             <File>
+              <FileName>lv_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\lvgl\src\extra\widgets\list\lv_list.c</FilePath>
+            </File>
+            <File>
               <FileName>lv_flex.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\lvgl\src\extra\layouts\flex\lv_flex.c</FilePath>
@@ -1747,39 +1647,39 @@
               <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\gui_guider.c</FilePath>
             </File>
             <File>
-              <FileName>setup_scr_SettingsPage4CheckUpdate1.c</FileName>
+              <FileName>_trademark_alpha_34x34.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage4CheckUpdate1.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\images\_trademark_alpha_34x34.c</FilePath>
             </File>
             <File>
-              <FileName>setup_scr_SettingsPage4CheckUpdate2.c</FileName>
+              <FileName>setup_scr_SettingsPage1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage4CheckUpdate2.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage1.c</FilePath>
             </File>
             <File>
-              <FileName>setup_scr_SettingsPage4CheckUpdate3.c</FileName>
+              <FileName>setup_scr_SettingsPage2Basic.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage4CheckUpdate3.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage2Basic.c</FilePath>
             </File>
             <File>
-              <FileName>setup_scr_SettingsPage4Info.c</FileName>
+              <FileName>setup_scr_SettingsPage2Wireless1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage4Info.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage2Wireless1.c</FilePath>
             </File>
             <File>
-              <FileName>setup_scr_SettingsPage4UpdateCplt.c</FileName>
+              <FileName>setup_scr_SettingsPage2Wireless2.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage4UpdateCplt.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage2Wireless2.c</FilePath>
             </File>
             <File>
-              <FileName>setup_scr_SettingsPage4UpdateError.c</FileName>
+              <FileName>setup_scr_SettingsPage3Remote1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage4UpdateError.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage3Remote1.c</FilePath>
             </File>
             <File>
-              <FileName>setup_scr_SettingsPage4Updating.c</FileName>
+              <FileName>setup_scr_SettingsPage2_Basic.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage4Updating.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\setup_scr_SettingsPage2_Basic.c</FilePath>
             </File>
             <File>
               <FileName>widgets_init.c</FileName>
@@ -1797,34 +1697,29 @@
               <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\guider_fonts\lv_font_montserratMedium_16.c</FilePath>
             </File>
             <File>
-              <FileName>lv_font_simsun_12.c</FileName>
+              <FileName>lv_font_Abel_regular_20.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\guider_fonts\lv_font_simsun_12.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\guider_fonts\lv_font_Abel_regular_20.c</FilePath>
             </File>
             <File>
-              <FileName>lv_font_simsun_16.c</FileName>
+              <FileName>lv_font_simsun_20.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\guider_fonts\lv_font_simsun_16.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\guider_fonts\lv_font_simsun_20.c</FilePath>
             </File>
             <File>
-              <FileName>lv_font_simsun_25.c</FileName>
+              <FileName>lv_font_simsun_18.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\guider_fonts\lv_font_simsun_25.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\guider_fonts\lv_font_simsun_18.c</FilePath>
             </File>
             <File>
-              <FileName>_trademark_alpha_34x34.c</FileName>
+              <FileName>lv_font_simsun_21.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\images\_trademark_alpha_34x34.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\guider_fonts\lv_font_simsun_21.c</FilePath>
             </File>
             <File>
-              <FileName>_download_alpha_185x135.c</FileName>
+              <FileName>lv_font_simsun_23.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\images\_download_alpha_185x135.c</FilePath>
-            </File>
-            <File>
-              <FileName>_downloadx_alpha_185x135.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\images\_downloadx_alpha_185x135.c</FilePath>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\generated\guider_fonts\lv_font_simsun_23.c</FilePath>
             </File>
           </Files>
         </Group>

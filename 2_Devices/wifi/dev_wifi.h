@@ -33,7 +33,14 @@ typedef struct NetNode{
     struct NetNode *next; //链表管理
 }NetNode;
 
-
+//一个扫描到的WiFi热点信息（AT+WSCAN 应答行 <index> <SSID>,<CH>,<SECURITY>,<RSSI>,<BSSID>）
+typedef struct WiFiApInfo{
+    char ssid[33];          //热点名（协议最长32字节+'\0'）
+    unsigned char channel;  //信道号
+    char security[24];      //加密方式（OPEN/WPA/WPA2...按芯片应答原样保存）
+    signed char rssi;       //信号强度 dBm（负数，越接近0越强）
+    char bssid[18];         //热点MAC地址 "xx:xx:xx:xx:xx:xx"
+}WiFiApInfo;
 
 typedef struct WiFiBtDev{
     char *name;
@@ -47,6 +54,7 @@ typedef struct WiFiBtDev{
     int (*Write)(struct WiFiBtDev *ptdev, unsigned int port, unsigned char *buf, unsigned int length);
     int (*Read)(struct WiFiBtDev *ptdev, unsigned int port, unsigned char *buf, unsigned int length);
     int (*WIFIStaStatus)(struct WiFiBtDev *ptdev, unsigned int timeout);   // 查询WiFi连接状态
+    int (*WIFIScan)(struct WiFiBtDev *ptdev, WiFiApInfo *apList, unsigned char maxAp, unsigned int timeout);   // 扫描周围热点刷新WiFi列表
 }WiFiBtDevice;
 
 WiFiBtDevice *GetWIFIBTDevice(void);

@@ -85,15 +85,68 @@ void settings_p1_enter_wireless1(lv_event_t *e)
     nav_push_and_load(guider_ui.SettingsPage2Wireless1);
 }
 
-/* settings_p1_enter_remote1：「远程管理」cont_2 点击 → 懒创建并跳转 SettingsPage3Remote1 */
+/* settings_p1_enter_remote1：「远程管理」cont_2 点击 → 懒创建并跳转 SettingsPage3Remote1。
+ * 未连接 WiFi 时忽略（卡片此时已不可点击，这里再兜底一次，防止残留状态/程序化触发） */
 void settings_p1_enter_remote1(lv_event_t *e)
 {
+    char ssid[33];
     (void)e;
+
+    if(!WifiScan_GetConnectedSsid(ssid, sizeof(ssid)))   return;
 
     if(NULL == guider_ui.SettingsPage3Remote1)
         setup_scr_SettingsPage3Remote1(&guider_ui);
 
     nav_push_and_load(guider_ui.SettingsPage3Remote1);
+}
+
+/* ==================== SettingsPage1：联网相关卡片使能 ====================
+ * cont_2「远程管理」、cont_3「管理系统」依赖 WiFi：
+ *   - 未连接：清除 CLICKABLE 标志（整卡不可点击，label 本身也不可点击），并显示为灰色；
+ *   - 已连接：恢复可点击与正常配色。
+ * 由 tick_screen_SettingsPage1 周期调用；只有连接状态变化时才改样式，避免每帧刷新。 */
+
+#define SETTINGS_P1_CARD_ON_BG       0xFFFFFF
+#define SETTINGS_P1_CARD_ON_BORDER   0xFFFFFF
+#define SETTINGS_P1_CARD_OFF_BG      0xF1F3F6
+#define SETTINGS_P1_CARD_OFF_BORDER  0xE3E7ED
+#define SETTINGS_P1_TEXT_ON          0x000000
+#define SETTINGS_P1_TEXT_OFF         0xA8B0BB
+
+static int8_t s_p1_net_cards_enabled = -1;   /* -1-尚未应用；0-禁用；1-使能 */
+
+static void settings_p1_net_card_set(lv_obj_t *card, lv_obj_t *label, unsigned char enabled)
+{
+    if(NULL == card)   return;
+
+    if(enabled)   lv_obj_add_flag(card, LV_OBJ_FLAG_CLICKABLE);
+    else          lv_obj_clear_flag(card, LV_OBJ_FLAG_CLICKABLE);
+
+    lv_obj_set_style_bg_color(card,
+        lv_color_hex(enabled ? SETTINGS_P1_CARD_ON_BG : SETTINGS_P1_CARD_OFF_BG),
+        LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_border_color(card,
+        lv_color_hex(enabled ? SETTINGS_P1_CARD_ON_BORDER : SETTINGS_P1_CARD_OFF_BORDER),
+        LV_PART_MAIN|LV_STATE_DEFAULT);
+
+    if(NULL != label)
+        lv_obj_set_style_text_color(label,
+            lv_color_hex(enabled ? SETTINGS_P1_TEXT_ON : SETTINGS_P1_TEXT_OFF),
+            LV_PART_MAIN|LV_STATE_DEFAULT);
+}
+
+void settings_p1_net_cards_update(void)
+{
+    char ssid[33];
+    unsigned char enabled = WifiScan_GetConnectedSsid(ssid, sizeof(ssid)) ? 1 : 0;
+
+    if((int8_t)enabled == s_p1_net_cards_enabled)   return;   /* 状态未变：不重设样式 */
+    s_p1_net_cards_enabled = (int8_t)enabled;
+
+    settings_p1_net_card_set(guider_ui.SettingsPage1_cont_2,
+                             guider_ui.SettingsPage1_label_2, enabled);
+    settings_p1_net_card_set(guider_ui.SettingsPage1_cont_3,
+                             guider_ui.SettingsPage1_label_4, enabled);
 }
 
 /* settings_back：各子页右上角「<-返回」→ 出栈加载上一个界面（栈空=已在首页，忽略） */

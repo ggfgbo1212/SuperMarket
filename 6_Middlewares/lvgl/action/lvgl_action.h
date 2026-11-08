@@ -37,6 +37,11 @@ void settings_p1_enter_wireless1(lv_event_t *e);
 /* SettingsPage1「远程管理」cont_2 点击 → 进入 SettingsPage3Remote1 */
 void settings_p1_enter_remote1(lv_event_t *e);
 
+/* SettingsPage1：按 WiFi 连接状态使能/禁用 cont_2「远程管理」、cont_3「管理系统」。
+ * 未连接时两卡片不可点击并显示为灰色；连接后自动恢复。
+ * 由 tickscreen 的 SettingsPage1 tick 周期调用。 */
+void settings_p1_net_cards_update(void);
+
 /* 各子页面右上角「<-返回」btn_1 点击 → 返回上一个界面（导航历史栈出栈） */
 void settings_back(lv_event_t *e);
 

@@ -26,7 +26,8 @@ void tickscreen_init(void)
 
 void tick_screen_SettingsPage1(void)
 {
-    /* 设置主页（上电首屏）：页面周期逻辑待填写 */
+    /* 设置主页（上电首屏）：cont_2/cont_3 仅在 WiFi 连接成功后可用 */
+    settings_p1_net_cards_update();
 }
 
 void tick_screen_SettingsPage2Basic(void)

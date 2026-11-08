@@ -430,7 +430,7 @@
 
 #define LV_USE_CANVAS 0
 
-#define LV_USE_CHECKBOX 0
+#define LV_USE_CHECKBOX 1
 
 #define LV_USE_DROPDOWN 0
 
@@ -496,7 +496,7 @@
 
 #define LV_USE_IMGBTN 0
 
-#define LV_USE_KEYBOARD 0
+#define LV_USE_KEYBOARD 1
 
 #define LV_USE_LED 1
 

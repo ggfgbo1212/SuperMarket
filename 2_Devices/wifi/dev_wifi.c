@@ -100,11 +100,13 @@ static int WifiBT_Init(struct WiFiBtDev *ptdev)
 static int WifiBT_WIFIConnect(struct WiFiBtDev *ptdev, const char *username, const char *password)
 {
     if(ptdev == NULL || username == NULL || password == NULL)  return -EINVAL;
-    
-    char str[100];  
-    sprintf(str, "AT+WJAP=%s,%s\r\n", username, password);  
+    if(pUart == NULL || pRxBuffer == NULL)                     return -ENODEV;
+
+    /* 预留 8("AT+WJAP=") + 32(SSID) + 1(',') + 63(PSK) + 2("\r\n") + 1('\0') = 107 字节 */
+    char str[160];
+    sprintf(str, "AT+WJAP=%s,%s\r\n", username, password);
     unsigned char len = strlen(str);
-    
+
     // 先清空buffer
     int ret = pRxBuffer->Clear(pRxBuffer);
     if(ESUCCESS != ret) return ret;
@@ -113,9 +115,12 @@ static int WifiBT_WIFIConnect(struct WiFiBtDev *ptdev, const char *username, con
     if(len != ret) return ret;
     // 超时等待响应
     ret = WiFiBTWaitACK("WIFI_GOT_IP\r\n", 5000);//查询buffer是否有WIFI_GOT_IP
-    ptdev->dev_status = 1;  // connected
-    printf("%s\r\n", pRxBuffer->info.pHead);
-    return ret;   
+    /* 只有等到 GOT_IP 才算连接成功；失败保持 0（原实现无论成败都置 1） */
+    if(ESUCCESS == ret) ptdev->dev_status = 1;  // connected
+    else                ptdev->dev_status = 0;
+    /* pHead 指向 100 字节环形缓冲区，未以 '\0' 结尾，限定最大读取长度防止越界 */
+    printf("%.99s\r\n", (char *)pRxBuffer->info.pHead);
+    return ret;
 }
 
 /**
@@ -313,7 +318,18 @@ static int WiFiBTWaitACK(const char *ack, unsigned int timeout)
     while(timeout)
     {
         int ret = pRxBuffer->Read(pRxBuffer, (unsigned char *)&buf[i], 1);
-        if(ret == 1)    i = (i+1)%128;
+        if(ret == 1)
+        {
+            i++;
+            /* 始终保证 buf 以 '\0' 结尾，避免 strstr 越界读取：
+             * 保留最后 1 字节作为结束符，写满时整体清空重新接收。
+             * ACK 均为短字符串且逐字节检测，清空不会漏判。 */
+            if(i >= sizeof(buf) - 1)
+            {
+                memset(buf, 0, sizeof(buf));
+                i = 0;
+            }
+        }
         // 判断响应
         if(strstr(buf, ack))   return ESUCCESS;
         else if(strstr(buf, "ERR")) return -EIO;

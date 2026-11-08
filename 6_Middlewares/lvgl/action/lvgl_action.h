@@ -17,6 +17,7 @@ extern "C" {
 #endif
 
 #include "gui_guider.h"   /* lv_ui 结构体类型 + 各屏控件句柄定义 */
+#include "dev_wifi.h"     /* WiFiApInfo：WiFi 列表显示 */
 
 /* 全局 UI 对象：外部模块用这个变量访问各屏控件（如 guider_ui.HomeScreen） */
 extern lv_ui guider_ui;
@@ -44,6 +45,28 @@ void settings_p2_slider_brightness(lv_event_t *e);
 
 /* SettingsPage2Basic 按键声音开关 → 使能/关闭触摸提示音 */
 void settings_p2_switch_beep(lv_event_t *e);
+
+/* ==================== SettingsPage2Wireless1：WiFi 列表 ==================== */
+/* list_1 中预建 15 个容器（每容器一个连接复选框 + 一个 SSID label），默认全部隐藏 */
+#define WIFI_LIST_ROW_NUM   15
+
+/* 创建 15 个列表容器（幂等，首次进入无线设置页时调用） */
+void wifi_list_ui_create(void);
+
+/* 显示整个列表并填充前 count 个热点名称，其余行隐藏（count=0 即空列表） */
+void wifi_list_ui_show(const WiFiApInfo *aps, int count);
+
+/* 隐藏整个列表（开关关闭时调用，参考 ESP_Epoch 工程行为） */
+void wifi_list_ui_hide_all(void);
+
+/* ==================== SettingsPage2Wireless2：WiFi 密码输入 + 连接 ==================== */
+/* 页面 tick（UI 线程）：轮询后台连接结果。
+ * 成功 → 自动返回 SettingsPage2Wireless1；失败 → ta_1 输入框内显示“密码错误” */
+void wireless2_ui_tick(void);
+
+/* 离开密码页时调用（UI 线程）：清除在途标记、丢弃残留连接结果，
+ * 避免“连接中按返回离开”后列表行点击被永久屏蔽 */
+void wireless2_ui_deactivate(void);
 
 #ifdef __cplusplus
 }

@@ -388,6 +388,11 @@
               <FileType>1</FileType>
               <FilePath>..\1_Appcations\gpio_test.c</FilePath>
             </File>
+            <File>
+              <FileName>wifi_scan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\1_Appcations\wifi_scan.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1357,6 +1362,11 @@
               <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\lvgl\src\extra\widgets\led\lv_led.c</FilePath>
             </File>
             <File>
+              <FileName>lv_keyboard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\lvgl\src\extra\widgets\keyboard\lv_keyboard.c</FilePath>
+            </File>
+            <File>
               <FileName>lv_list.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\6_Middlewares\lvgl\SleepAid_UI\lvgl\src\extra\widgets\list\lv_list.c</FilePath>
@@ -1755,6 +1765,11 @@
               <FileName>lvgl_action.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\6_Middlewares\lvgl\action\lvgl_action.c</FilePath>
+            </File>
+            <File>
+              <FileName>wifi_pwd_error_img.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\6_Middlewares\lvgl\action\wifi_pwd_error_img.c</FilePath>
             </File>
           </Files>
         </Group>

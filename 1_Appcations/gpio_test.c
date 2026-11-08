@@ -2,7 +2,7 @@
 #include "dev_uart.h"
 #include "dev_iic.h"
 #include "dev_spi.h"
-#include "dev_wifi.h"    /* WiFiBtDevice：WIFIScan 扫描周围热点 */
+#include "wifi_scan.h"   /* WifiScan_Init：WiFi 列表后台刷新任务 */
 #include <string.h>
 #include "printf.h"
 #include "errno.h"
@@ -28,58 +28,6 @@
 /* guider_ui 全局对象定义在 6_Middlewares/lvgl/action/lvgl_action.c，经 lvgl_action.h extern 使用 */
 
 static TaskHandle_t gDispTaskHandle = NULL;
-static TaskHandle_t gWifiScanTaskHandle = NULL;
-
-/* ==================== WiFi 列表刷新任务 ==================== */
-
-#define WIFI_SCAN_INTERVAL_MS   10000   /* 每10秒刷新一次列表 */
-#define WIFI_SCAN_MAX_AP        20      /* 一次最多保存的热点数 */
-#define WIFI_SCAN_TIMEOUT_MS    10000   /* 扫描超时（芯片扫描本身需数秒） */
-
-/* 每10秒扫描一次周围WiFi热点，串口打印扫描结果 */
-static void WifiScanTask(void *argument)
-{
-    (void)argument;
-
-    WiFiBtDevice *pWifi = GetWIFIBTDevice();
-    static WiFiApInfo apList[WIFI_SCAN_MAX_AP];
-
-    /* 芯片初始化（含AT测试/RST/关回显/AP_STA模式/主动接收） */
-    if(NULL == pWifi || ESUCCESS != pWifi->Init(pWifi))
-    {
-        debugprintf("WiFi init failed, scan task stop\r\n");
-        vTaskDelete(NULL);
-        return;
-    }
-    debugprintf("WiFi init ok, scan every %dms\r\n", WIFI_SCAN_INTERVAL_MS);
-
-    while(1)
-    {
-        int n = pWifi->WIFIScan(pWifi, apList, WIFI_SCAN_MAX_AP, WIFI_SCAN_TIMEOUT_MS);
-
-        if(n >= 0)
-        {
-            debugprintf("\r\n===== WSCAN: %d AP(s) =====\r\n", n);
-            for(int i = 0; i < n; i++)
-            {
-                debugprintf("[%02d] SSID:%-20s CH:%-3d SEC:%-10s RSSI:%4d BSSID:%s\r\n",
-                            i,
-                            apList[i].ssid,
-                            apList[i].channel,
-                            apList[i].security,
-                            apList[i].rssi,
-                            apList[i].bssid);
-            }
-            debugprintf("==========================\r\n");
-        }
-        else
-        {
-            debugprintf("WSCAN failed, ret=%d\r\n", n);
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(WIFI_SCAN_INTERVAL_MS));
-    }
-}
 
 /* LVGL 节拍：FreeRTOS 软件定时器每 1ms 回调一次（configTICK_RATE_HZ = 1000） */
 static void gui_timer_cb(TimerHandle_t handle)
@@ -150,10 +98,8 @@ void app_test()
         debugprintf("DisplayTask create failed\r\n");
     }
 
-    /* 创建 WiFi 扫描任务：每10秒扫描一次周围热点并串口打印 */
-    if(pdPASS != xTaskCreate(WifiScanTask, "WifiScanTask", 512, NULL, 3, &gWifiScanTaskHandle))
-    {
-        debugprintf("WifiScanTask create failed\r\n");
-    }
+    /* 创建 WiFi 列表刷新任务：仅当停留在无线设置页且开关打开时才扫描
+     * （任务与结果共享实现在 wifi_scan.c，UI 侧在 tickscreen.c 判定条件） */
+    WifiScan_Init();
 
 }
